@@ -1,6 +1,6 @@
 from flask import Flask,request,jsonify
 from flask_cors import CORS
-from salary_calculator import generate_salary_report
+from backend.salary_calculator import generate_salary_report
 
 app= Flask(__name__)
 CORS(app)
@@ -12,5 +12,5 @@ def calculate():
     return jsonify(report)
 
 if __name__=="__main__":
-    # app.run(debug=True)
-     app.run(host='0.0.0.0', port=10000)
+    app.run(debug=True)
+    #  app.run(host='0.0.0.0', port=10000)
