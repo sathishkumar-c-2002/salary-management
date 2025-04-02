@@ -33,6 +33,7 @@ function App() {
         formData
       );
       setReport(response.data);
+      console.log(response);
     } catch (error) {
       console.error("Error:", error);
       alert("Error calculating salary");
