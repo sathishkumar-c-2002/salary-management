@@ -1,6 +1,6 @@
 from flask import Flask,request,jsonify
 from flask_cors import CORS
-from salary_calculator import generate_salary_report
+from .salary_calculator import generate_salary_report
 
 app= Flask(__name__)
 CORS(app)
