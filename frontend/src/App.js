@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Bar } from "react-chartjs-2";
+import { Bar ,Pie,Doughnut, Line } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 import "./App.css";
 
@@ -18,7 +18,6 @@ function App() {
   const [error, setError] = useState(null);
 
   const handleChange = (e) => {
-    // Handle empty values gracefully
     const value = e.target.value === "" ? "" : parseFloat(e.target.value);
     setFormData({
       ...formData,
@@ -138,42 +137,86 @@ function App() {
       </form>
 
       {report && (
-        <div className="report">
-          <h2>Salary Report</h2>
+  <div className="report">
+    <h2>Salary Report</h2>
 
-          {chartData && (
-            <div className="chart-container">
-              <Bar
-                data={chartData}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                }}
-              />
-            </div>
-          )}
+    {/* Existing Bar Chart */}
+    {chartData && (
+      <div className="chart-container">
+        <h3>Income vs Expenses vs Savings</h3>
+        <Bar
+          data={chartData}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+          }}
+        />
+      </div>
+    )}
 
-          <div className="calculations">
-            <p>
-              <strong>Total Income:</strong> $
-              {report.calculations.total_income.toFixed(2)}
-            </p>
-            <p>
-              <strong>Total Expenses:</strong> $
-              {report.calculations.total_expenses.toFixed(2)}
-            </p>
-            <p>
-              <strong>Net Savings:</strong> $
-              {report.calculations.net_savings.toFixed(2)}
-            </p>
-            <p>
-              <strong>Savings Percentage:</strong>{" "}
-              {report.calculations.savings_percentage.toFixed(2)}%
-            </p>
-          </div>
-        </div>
-      )}
+   
+
+    <div className="calculations">
+      <p>
+        <strong>Total Income:</strong> $
+        {report.calculations.total_income.toFixed(2)}
+      </p>
+      <p>
+        <strong>Total Expenses:</strong> $
+        {report.calculations.total_expenses.toFixed(2)}
+      </p>
+      <p>
+        <strong>Net Savings:</strong> $
+        {report.calculations.net_savings.toFixed(2)}
+      </p>
+      <p>
+        <strong>Savings Percentage:</strong>{" "}
+        {report.calculations.savings_percentage.toFixed(2)}%
+      </p>
     </div>
+  </div>
+)}    
+ {/* New Pie Chart for Expense Breakdown */}
+ {report && (
+      <div className="chart-container">
+        <h3>Expense Breakdown</h3>
+        <Pie
+          data={chartData}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+          }}
+        />
+      </div>
+    )}
+
+
+{report && (
+      <div className="chart-container">
+        <h3>Expense Breakdown</h3>
+        <Doughnut 
+           data={chartData}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+          }}
+        />
+      </div>
+    )}
+    {report && (
+      <div className="chart-container">
+        <h3>Expense Breakdown</h3>
+        <Line
+            data={chartData}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+          }}
+        />
+      </div>
+    )}
+    
+</div>
   );
 }
 
