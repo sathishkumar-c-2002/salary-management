@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import './App.css'
 import axios from "axios";
 import { Bar } from "react-chartjs-2";
-// Removed unused import
+import { Chart as ChartJS } from "chart.js/auto";
+import './App.css'
 
 function App() {
   const [formData, setFormData] = useState({
     basic_salary: "",
     incentives: "",
     spends: "",
-    recharges: "",
+    recharge: "",
     grocery: "",
   });
 
@@ -29,11 +29,10 @@ function App() {
 
     try {
       const response = await axios.post(
-        process.env.REACT_APP_API_URL || "https://salary-management-backend.onrender.com",
+        process.env.REACT_APP_API_URL || "http://localhost:5000/api/calculate",
         formData
       );
       setReport(response.data);
-      console.log(response);
     } catch (error) {
       console.error("Error:", error);
       alert("Error calculating salary");
@@ -41,7 +40,6 @@ function App() {
       setLoading(false);
     }
   };
-
 
   const chartData = report
     ? {
@@ -55,14 +53,14 @@ function App() {
               report.calculations.net_savings,
             ],
             backgroundColor: [
-              "rgba(73,192,192,0.6)",
-              "rgba(255,99,132,0.6)",
-              "rgba(54,162,235,0.6)",
+              "rgba(75, 192, 192, 0.6)",
+              "rgba(255, 99, 132, 0.6)",
+              "rgba(54, 162, 235, 0.6)",
             ],
             borderColor: [
-              "rgba(75,192,192,1)",
-              "rgba(255,99,132,1)",
-              "rgba(54,162,235,1)",
+              "rgba(75, 192, 192, 1)",
+              "rgba(255, 99, 132, 1)",
+              "rgba(54, 162, 235, 1)",
             ],
             borderWidth: 1,
           },
@@ -72,7 +70,7 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Emploee Salary Management</h1>
+      <h1>Employee Salary Management</h1>
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -107,17 +105,17 @@ function App() {
             required
           />
         </div>
-{/* 
+
         <div className="form-group">
           <label>Recharge ($)</label>
           <input
             type="number"
             name="recharge"
-            value={formData.recharges}
+            value={formData.recharge}
             onChange={handleChange}
-            // required
+            required
           />
-        </div> */}
+        </div>
 
         <div className="form-group">
           <label>Grocery ($)</label>
@@ -138,6 +136,7 @@ function App() {
       {report && (
         <div className="report">
           <h2>Salary Report</h2>
+
           <div className="chart-container">
             <Bar data={chartData} />
           </div>
@@ -155,10 +154,15 @@ function App() {
               <strong>Net Savings:</strong> $
               {report.calculations.net_savings.toFixed(2)}
             </p>
+            <p>
+              <strong>Savings Percentage:</strong>{" "}
+              {report.calculations.savings_percentage.toFixed(2)}%
+            </p>
           </div>
         </div>
       )}
     </div>
   );
 }
+
 export default App;
