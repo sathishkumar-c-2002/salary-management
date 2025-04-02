@@ -29,78 +29,16 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
-    setReport(null); // Clear previous report
-  
+    
     try {
-      // Validate all fields are filled with positive numbers
-      const validationErrors = [];
-      const payload = {};
-      
-      Object.entries(formData).forEach(([key, value]) => {
-        const numValue = Number(value);
-        
-        if (value === "") {
-          validationErrors.push(`${key.replace('_', ' ')} is required`);
-        } else if (isNaN(numValue)) {
-          validationErrors.push(`${key.replace('_', ' ')} must be a number`);
-        } else if (numValue < 0) {
-          validationErrors.push(`${key.replace('_', ' ')} must be positive`);
-        } else {
-          payload[key] = numValue;
-        }
-      });
-  
-      if (validationErrors.length > 0) {
-        throw new Error(validationErrors.join('\n'));
-      }
-  
-      // API call with timeout
       const response = await axios.post(
-        process.env.REACT_APP_API_URL || 
-        "https://salary-management-backend.onrender.com/api/calculate",
-        payload,
-        {
-          headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-          },
-          timeout: 10000 // 10 seconds timeout
-        }
+        process.env.REACT_APP_API_URL || 'https://salary-management-backend.onrender.com/api/calculate',
+        formData
       );
-  
-      // Validate response structure
-      if (!response?.data?.calculations || !response.data.plot) {
-        throw new Error("Invalid response structure from server");
-      }
-  
-      // Additional validation for calculation results
-      const { total_income, total_expenses, net_savings } = response.data.calculations;
-      if (total_income < total_expenses) {
-        console.warn("Expenses exceed income"); // Just a warning, not blocking
-      }
-      if (net_savings < 0) {
-        console.warn("Negative savings detected");
-      }
-  
       setReport(response.data);
     } catch (error) {
-      console.error("Error details:", error);
-      
-      let errorMessage = "Failed to calculate salary";
-      if (error.response) {
-        // Server responded with error status
-        errorMessage = error.response.data?.message || 
-                      `Server error: ${error.response.status}`;
-      } else if (error.request) {
-        // Request was made but no response
-        errorMessage = "No response from server. Please try again later.";
-      } else if (error.message) {
-        // Custom validation errors
-        errorMessage = error.message;
-      }
-      
-      setError(errorMessage);
+      console.error('Error:', error);
+      alert('Error calculating salary');
     } finally {
       setLoading(false);
     }
