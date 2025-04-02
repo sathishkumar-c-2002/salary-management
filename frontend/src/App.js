@@ -9,7 +9,7 @@ function App() {
     basic_salary: "",
     incentives: "",
     spends: "",
-    recharge: "",
+    recharges: "",
     grocery: "",
   });
 
@@ -29,7 +29,7 @@ function App() {
 
     try {
       const response = await axios.post(
-        process.env.REACT_APP_API_URL || "https://salary-management-backend.onrender.com",
+        process.env.REACT_APP_API_URL || "http://127.0.0.1:5000/api/calculate",
         formData
       );
       setReport(response.data);
@@ -41,6 +41,7 @@ function App() {
       setLoading(false);
     }
   };
+
 
   const chartData = report
     ? {
@@ -106,7 +107,7 @@ function App() {
             required
           />
         </div>
-
+{/* 
         <div className="form-group">
           <label>Recharge ($)</label>
           <input
@@ -114,9 +115,9 @@ function App() {
             name="recharge"
             value={formData.recharges}
             onChange={handleChange}
-            required
+            // required
           />
-        </div>
+        </div> */}
 
         <div className="form-group">
           <label>Grocery ($)</label>
