@@ -8,7 +8,7 @@ CORS(app, resources={
     r"/api/*": {
         "origins": [
             "http://localhost:3000",  
-            "https://salary-management-frontend.onrender.com"  
+            "https://salary-manage.netlify.app/"  
         ],
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type"]
