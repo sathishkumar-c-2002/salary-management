@@ -29,13 +29,24 @@ function App() {
 
     try {
       const response = await axios.post(
-        process.env.REACT_APP_API_URL || "https://salary-management-backend.onrender.com/api/calculate",//"http://127.0.0.1:10000/api/calculate",
-        formData
+        process.env.REACT_APP_API_URL || "https://salary-management-backend.onrender.com/api/calculate",
+        formData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
       );
       setReport(response.data);
     } catch (error) {
-      console.error("Error:", error);
-      alert("Error calculating salary");
+      console.error("Error details:", error);
+      if (error.response) {
+        alert(`Error: ${error.response.data.message || error.response.statusText}`);
+      } else if (error.request) {
+        alert("No response received from server. Check console for details.");
+      } else {
+        alert(`Error: ${error.message}`);
+      }
     } finally {
       setLoading(false);
     }
