@@ -1,6 +1,9 @@
 from flask import Flask,request,jsonify
 from flask_cors import CORS
-from .salary_calculator import generate_salary_report
+try:
+    from salary_calculator import generate_salary_report
+except ModuleNotFoundError:
+    raise ImportError("Ensure 'salary_calculator.py' is in the same directory or installed as a package.")
 
 app= Flask(__name__)
 CORS(app)
