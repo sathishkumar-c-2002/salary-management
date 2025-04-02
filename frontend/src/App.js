@@ -32,7 +32,7 @@ function App() {
     
     try {
       const response = await axios.post(
-        process.env.REACT_APP_API_URL || 'https://salary-management-backend.onrender.com/api/calculate',
+        process.env.REACT_APP_API_URL || 'https://salary-management-backend.onrender.com',
         formData
       );
       setReport(response.data);
@@ -132,7 +132,7 @@ function App() {
           />
         </div>
 
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} >
           {loading ? "Calculating..." : "Calculate"}
         </button>
       </form>
