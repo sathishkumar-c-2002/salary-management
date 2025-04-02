@@ -10,7 +10,7 @@ function App() {
     incentives: "",
     spends: "",
     recharge: "",
-    grocery: ""
+    grocery: "",
   });
 
   const [report, setReport] = useState(null);
@@ -22,7 +22,7 @@ function App() {
     const value = e.target.value === "" ? "" : parseFloat(e.target.value);
     setFormData({
       ...formData,
-      [e.target.name]: value
+      [e.target.name]: value,
     });
   };
 
@@ -33,7 +33,7 @@ function App() {
 
     try {
       // Validate all fields are numbers
-      const hasEmptyValues = Object.values(formData).some(val => val === "");
+      const hasEmptyValues = Object.values(formData).some((val) => val === "");
       if (hasEmptyValues) {
         throw new Error("Please fill all fields with valid numbers");
       }
@@ -44,13 +44,14 @@ function App() {
       );
 
       const response = await axios.post(
-        process.env.REACT_APP_API_URL || "https://salary-management-backend.onrender.com/api/calculate",
+        process.env.REACT_APP_API_URL ||
+          "https://salary-management-backend.onrender.com/api/calculate",
         payload,
         {
           headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
-          }
+            Accept: "application/json",
+          },
         }
       );
 
@@ -67,7 +68,7 @@ function App() {
     }
   };
 
-  const chartData = report 
+  const chartData = report
     ? {
         labels: ["Income", "Expenses", "Savings"],
         datasets: [
@@ -76,24 +77,23 @@ function App() {
             data: [
               report.calculations.total_income,
               report.calculations.total_expenses,
-              report.calculations.net_savings
+              report.calculations.net_savings,
             ],
             backgroundColor: [
               "rgba(75, 192, 192, 0.6)",
               "rgba(255, 99, 132, 0.6)",
-              "rgba(54, 162, 235, 0.6)"
+              "rgba(54, 162, 235, 0.6)",
             ],
             borderColor: [
               "rgba(75, 192, 192, 1)",
               "rgba(255, 99, 132, 1)",
-              "rgba(54, 162, 235, 1)"
+              "rgba(54, 162, 235, 1)",
             ],
-            borderWidth: 1
-          }
-        ]
-      } 
+            borderWidth: 1,
+          },
+        ],
+      }
     : null;
-
 
   return (
     <div className="container">
@@ -164,9 +164,17 @@ function App() {
         <div className="report">
           <h2>Salary Report</h2>
 
-          <div className="chart-container">
-            <Bar data={chartData} />
-          </div>
+          {chartData && (
+            <div className="chart-container">
+              <Bar
+                data={chartData}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                }}
+              />
+            </div>
+          )}
 
           <div className="calculations">
             <p>
