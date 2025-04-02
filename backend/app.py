@@ -4,12 +4,11 @@ from salary_calculator import generate_salary_report
 
 app = Flask(__name__)
 
-# Configure CORS properly
 CORS(app, resources={
     r"/api/*": {
         "origins": [
-            "http://localhost:3000",  # For local development
-            "https://your-frontend-url.onrender.com"  # Your actual Render frontend URL
+            "http://localhost:3000",  
+            "https://salary-management-frontend.onrender.com"  
         ],
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type"]
