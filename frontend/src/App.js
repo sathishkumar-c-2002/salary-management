@@ -62,8 +62,8 @@ function App() {
         payload,
         {
           headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Accept": "application/json",
           },
           timeout: 10000 // 10 seconds timeout
         }
