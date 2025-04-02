@@ -30,44 +30,83 @@ function App() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
+    setReport(null); // Clear previous report
+  
     try {
-      // Validate all fields are numbers
-      const hasEmptyValues = Object.values(formData).some((val) => val === "");
-      if (hasEmptyValues) {
-        throw new Error("Please fill all fields with valid numbers");
+      // Validate all fields are filled with positive numbers
+      const validationErrors = [];
+      const payload = {};
+      
+      Object.entries(formData).forEach(([key, value]) => {
+        const numValue = Number(value);
+        
+        if (value === "") {
+          validationErrors.push(`${key.replace('_', ' ')} is required`);
+        } else if (isNaN(numValue)) {
+          validationErrors.push(`${key.replace('_', ' ')} must be a number`);
+        } else if (numValue < 0) {
+          validationErrors.push(`${key.replace('_', ' ')} must be positive`);
+        } else {
+          payload[key] = numValue;
+        }
+      });
+  
+      if (validationErrors.length > 0) {
+        throw new Error(validationErrors.join('\n'));
       }
-
-      // Convert all values to numbers
-      const payload = Object.fromEntries(
-        Object.entries(formData).map(([key, value]) => [key, Number(value)])
-      );
-
+  
+      // API call with timeout
       const response = await axios.post(
-        process.env.REACT_APP_API_URL ||
-          "https://salary-management-backend.onrender.com/api/calculate",
+        process.env.REACT_APP_API_URL || 
+        "https://salary-management-backend.onrender.com/api/calculate",
         payload,
         {
           headers: {
             "Content-Type": "application/json",
-            Accept: "application/json",
+            "Accept": "application/json",
           },
+          timeout: 10000 // 10 seconds timeout
         }
       );
-
-      if (!response.data || !response.data.calculations) {
-        throw new Error("Invalid response format from server");
+  
+      // Validate response structure
+      if (!response?.data?.calculations || !response.data.plot) {
+        throw new Error("Invalid response structure from server");
       }
-
+  
+      // Additional validation for calculation results
+      const { total_income, total_expenses, net_savings } = response.data.calculations;
+      if (total_income < total_expenses) {
+        console.warn("Expenses exceed income"); // Just a warning, not blocking
+      }
+      if (net_savings < 0) {
+        console.warn("Negative savings detected");
+      }
+  
       setReport(response.data);
     } catch (error) {
       console.error("Error details:", error);
-      setError(error.message || "Failed to calculate salary");
+      
+      let errorMessage = "Failed to calculate salary";
+      if (error.response) {
+        // Server responded with error status
+        errorMessage = error.response.data?.message || 
+                      `Server error: ${error.response.status}`;
+      } else if (error.request) {
+        // Request was made but no response
+        errorMessage = "No response from server. Please try again later.";
+      } else if (error.message) {
+        // Custom validation errors
+        errorMessage = error.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
+  
   const chartData = report
     ? {
         labels: ["Income", "Expenses", "Savings"],
