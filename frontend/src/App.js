@@ -28,7 +28,7 @@ function App() {
     setLoading(true);
 
     try {
-      const respone = await axios.post(
+      const response = await axios.post(
         process.env.REACT_APP_API_URL || "hppt:localhost:5000/api/calculate",
         formData
       );
