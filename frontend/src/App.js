@@ -29,7 +29,7 @@ function App() {
 
     try {
       const response = await axios.post(
-        process.env.REACT_APP_API_URL || "hppt:localhost:5000/api/calculate",
+        process.env.REACT_APP_API_URL || "http://localhost:5000/api/calculate",
         formData
       );
       setReport(response.data);
@@ -110,7 +110,7 @@ function App() {
           <label>Recharge ($)</label>
           <input
             type="number"
-            name="recharge"
+            name="recharges"
             value={formData.recharges}
             onChange={handleChange}
             required
