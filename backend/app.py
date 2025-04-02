@@ -1,23 +1,40 @@
-from flask import Flask,request,jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from salary_calculator import generate_salary_report
 
-app= Flask(__name__)
+app = Flask(__name__)
+
+# Configure CORS properly
 CORS(app, resources={
     r"/api/*": {
         "origins": [
-            "http://localhost:3000",  # For development
-            "https://salary-management-frontend.onrender.com/"  # Your Render frontend URL
-        ]
+            "http://localhost:3000",  # For local development
+            "https://your-frontend-url.onrender.com"  # Your actual Render frontend URL
+        ],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type"]
     }
 })
 
-@app.route('/api/calculate',methods=['POST'])
+@app.route('/api/calculate', methods=['POST', 'OPTIONS'])
 def calculate():
-    data = request.json
-    report = generate_salary_report(data)
-    return jsonify(report)
+    if request.method == 'OPTIONS':
+        return _build_cors_preflight_response()
+    elif request.method == 'POST':
+        data = request.json
+        report = generate_salary_report(data)
+        return _corsify_response(jsonify(report))
 
-if __name__=='__main__':
-    # app.run(debug=True)
-     app.run(host='0.0.0.0', port=10000)
+def _build_cors_preflight_response():
+    response = jsonify({'message': 'Preflight Request Accepted'})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Allow-Headers", "*")
+    response.headers.add("Access-Control-Allow-Methods", "*")
+    return response
+
+def _corsify_response(response):
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+if __name__ == '__main__':
+    app.run(debug=True)
