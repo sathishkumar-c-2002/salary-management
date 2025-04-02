@@ -3,7 +3,14 @@ from flask_cors import CORS
 from salary_calculator import generate_salary_report
 
 app= Flask(__name__)
-CORS(app)
+CORS(app, resources={
+    r"/api/*": {
+        "origins": [
+            "http://localhost:3000",  # For development
+            "https://salary-management-frontend.onrender.com/"  # Your Render frontend URL
+        ]
+    }
+})
 
 @app.route('/api/calculate',methods=['POST'])
 def calculate():
