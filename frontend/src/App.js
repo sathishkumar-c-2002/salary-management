@@ -29,7 +29,7 @@ function App() {
 
     try {
       const response = await axios.post(
-        process.env.REACT_APP_API_URL || "https://salary-management-backend.onrender.com",//"http://127.0.0.1:10000/api/calculate",
+        process.env.REACT_APP_API_URL || "https://salary-management-backend.onrender.com/api/calculate",//"http://127.0.0.1:10000/api/calculate",
         formData
       );
       setReport(response.data);
