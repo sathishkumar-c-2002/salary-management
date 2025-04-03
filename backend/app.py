@@ -9,7 +9,7 @@ import os
 app = Flask(__name__)
 
 # Configuring MongoDB
-app.config["MONGO_URI"] = os.getenv("MONGO_URI", "mongodb://localhost:27017/salary_reports")
+app.config["MONGO_URI"] = os.getenv("MONGO_URI" ,"mongodb+srv://csathishkumar:renuka02@cluster0.ktgvzmh.mongodb.net/salary_reports?retryWrites=true&w=majority&appName=Cluster0") #, "mongodb://localhost:27017/salary_reports")
 mongo = PyMongo(app)
 
 CORS(app, resources={
